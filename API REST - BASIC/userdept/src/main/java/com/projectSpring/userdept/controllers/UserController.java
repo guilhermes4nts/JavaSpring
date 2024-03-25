@@ -2,6 +2,7 @@ package com.projectSpring.userdept.controllers;
 
 import com.projectSpring.userdept.entities.User;
 import com.projectSpring.userdept.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +21,11 @@ public class UserController {
         return result;
     }
 
-    //Buscando e Retornando um Usuario pelo id
+    //Buscando e Retornando um Usuário pelo id
     @GetMapping(value = "/{id}")
     public User findById(@PathVariable Long id){
-        User result = repository.findById(id).get();
+        User result = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         return result;
     }
 
@@ -32,6 +34,17 @@ public class UserController {
     public User insert(@RequestBody User user){
         User result = repository.save(user);
         return result;
+    }
+
+    // Atualizando um Usuário no banco de dados
+    @PutMapping(value = "/{id}")
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        User existingUser = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+        existingUser.setName(user.getName()); // Substituir "setName" pelo método de atualização desejado
+        existingUser.setEmail(user.getEmail()); // Substituir "setEmail" pelo método de atualização desejado
+
+        User updatedUser = repository.save(existingUser);
+        return updatedUser;
     }
 
 }
