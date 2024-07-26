@@ -39,7 +39,7 @@ public class PlaceController {
     }
 
     //Endpoint para buscar um lugar pelo ID
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<PlaceModel> searchPlace(@PathVariable Long id){
         Optional<PlaceModel> placeModel = placeService.searchPLace(id);
 
